@@ -1,15 +1,14 @@
-
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
+    // ดึง IP ที่ Cloudflare ส่งมาให้
+    const clientIP = request.headers.get("CF-Connecting-IP") || "No-IP-Header";
     const allowedIP = "61.90.156.195";
-    const clientIP = request.headers.get("CF-Connecting-IP");
 
+    // ถ้าไม่ใช่ IP ที่กำหนด ให้แสดง IP ปัจจุบันของคุณโชว์ขึ้นมาบนจอเพื่อเอามาเช็ค
     if (clientIP !== allowedIP) {
-      return new Response("403 Forbidden - Access Denied", {
+      return new Response(`Access Denied! Your current IP is: ${clientIP}`, { 
         status: 403,
-        headers: {
-          "Content-Type": "text/plain; charset=UTF-8"
-        }
+        headers: { "Content-Type": "text/plain; charset=utf-8" }
       });
     }
 
